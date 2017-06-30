@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>To Do List</title>
+	<script src="https://unpkg.com/vue"></script>
+	<style type="text/css">
+		.complete{
+			text-decoration: line-through;
+		}
+	</style>
+</head>
+<body>
+	<div id="toDoList">
+		<form v-on:submit.prevent="addItem">
+			<input v-model="name" type="text" name="" placeholder="Enter Task Name">
+			<input v-model="desc" type="text" name="" placeholder="Enter Task Description">
+			<button>Add Task</button>
+		</form>
+		<ul v-for="item in toDoList">
+			<li><span v-bind:class="{complete: item.status}">{{ item.name }}-{{ item.desc }}</span><button v-on:click="toggleStatus(item.id)">Toggle Status</button><button v-on:click="deleteItem(item.id)">Delete</button></li>
+		</ul>
+	</div>
+	<script type="text/javascript">
+		var curItemID = 1;
+		function toDoListItem(name, desc){
+			this.name = name;
+			this.desc = desc;
+			this.id = curItemID;
+			this.status = false;
+			curItemID++;
+		}
+
+		var toDoListApp = new Vue({
+			el: '#toDoList',
+			data:{
+				toDoList: [],
+				name: "",
+				desc: ""
+			},
+			methods: {
+				addItem: function(){
+					this.toDoList.push(new toDoListItem(this.name, this.desc));
+					this.name = "";
+					this.desc = "";
+				},
+				deleteItem: function(id){
+					for(var i = 0; i < this.toDoList.length; i++){
+						if(this.toDoList[i].id == id){
+							this.toDoList.splice(i, 1);
+						}
+					}
+				},
+				toggleStatus: function(id){
+					for(var i = 0; i < this.toDoList.length; i++){
+						if(this.toDoList[i].id == id){
+							this.toDoList[i].status = !this.toDoList[i].status;
+						}
+					}
+				}
+
+			}
+		})
+	</script>
+</body>
+</html>
